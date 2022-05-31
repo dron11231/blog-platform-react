@@ -1,0 +1,23 @@
+@import '../../variables.scss';
+
+.authorization {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    &__btn {
+        line-height: 28px;
+        font-family: $main-font-family;
+        font-size: $lg-font-size;
+        padding: 0.5rem 1rem;
+        border: none;
+        color: $main-font-color;
+        background: none;
+    }
+
+    &__btn--sign-up {
+        border: 1px solid $success-color;
+        color: $success-color;
+        border-radius: 5px;
+    }
+}

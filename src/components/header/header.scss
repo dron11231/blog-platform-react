@@ -1,0 +1,19 @@
+@import '../../variables.scss';
+
+.header {
+    padding: 1.5rem 0;
+    background-color: white;
+
+    .inner-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__title {
+        font-size: $lg-font-size;
+        font-weight: 400;
+        margin: 0;
+        color: $main-font-color
+    }
+}

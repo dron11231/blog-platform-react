@@ -1,0 +1,52 @@
+@import '../../variables.scss';
+
+.article {
+    background-color: white;
+    filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.15));
+    padding: 1rem 1rem 1.5rem;
+
+    &__header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+    }
+
+    &__header-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    &__title {
+        color: $info-color;
+        line-height: 28px;
+        font-weight: 400;
+        font-size: $xl-font-size;
+        margin: 0;
+    }
+
+    &__like {
+        display: flex;
+        border: none;
+        background: none;
+        gap: 0.2rem;
+    }
+
+    &__details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__author-name {
+        line-height: 28px;
+        font-size: $lg-font-size;
+        color: $main-font-color;
+    }
+
+    &__date {
+        color: rgba(0, 0, 0, 0.5);
+        font-size: $main-font-size;
+        line-height: 22px;
+    }
+
+}
