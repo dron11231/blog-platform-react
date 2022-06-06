@@ -4,6 +4,7 @@
     background-color: white;
     filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.15));
     padding: 1rem 1rem 1.5rem;
+    width: 100%;
 
     &__header {
         display: flex;
@@ -13,8 +14,8 @@
 
     &__header-item {
         display: flex;
-        align-items: center;
         gap: 0.5rem;
+        align-items: center;
     }
 
     &__title {
@@ -27,9 +28,12 @@
 
     &__like {
         display: flex;
+        align-self: flex-start;
+        align-items: center;
         border: none;
         background: none;
         gap: 0.2rem;
+        margin-top: 0.2rem;
     }
 
     &__details {
@@ -43,10 +47,40 @@
         color: $main-font-color;
     }
 
+    &__avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 50px;
+    }
+
     &__date {
         color: rgba(0, 0, 0, 0.5);
         font-size: $main-font-size;
         line-height: 22px;
+    }
+
+    &__tags {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.2rem;
+    }
+
+    &__tag {
+        color: $main-font-color;
+        font-size: $main-font-size;
+        border: 1px solid black;
+        border-radius: 2px;
+        opacity: 0.9;
+        padding: 0.125rem 0.325rem;
+    }
+
+    &__description {
+        font-size: $main-font-size;
+        line-height: 22px;
+    }
+
+    &__body {
+        margin-top: 1rem;
     }
 
 }

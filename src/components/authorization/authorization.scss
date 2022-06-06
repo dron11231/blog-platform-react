@@ -5,7 +5,7 @@
     align-items: center;
     gap: 1rem;
 
-    &__btn {
+    &__btn--not-auth {
         line-height: 28px;
         font-family: $main-font-family;
         font-size: $lg-font-size;
@@ -20,4 +20,49 @@
         color: $success-color;
         border-radius: 5px;
     }
+
+    &__btn--sign-up:hover {
+        border-color: $info-color;
+    }
+
+    &__btn--create {
+        font-size: $md-font-size;
+        color: $success-color;
+        border: 1px solid $success-color;
+        line-height: 22px;
+        padding: 0.4rem 0.625rem;
+        border-radius: 5px;
+        margin-right: 0.6rem;
+    }
+
+    &__btn--create:hover {
+        border-color: $info-color;
+    }
+
+    &__btn--log-out {
+        border: 1px solid $main-font-color;
+        color: $main-font-color;
+        border-radius: 5px;
+        line-height: 28px;
+        font-family: $main-font-family;
+        font-size: $lg-font-size;
+        padding: 0.5rem 1rem;
+        background: none;
+        margin-left: 0.6rem;
+    }
+
+    &__user {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        color: $main-font-color;
+    }
+
+    &__avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 50px;
+    }
+    
 }
+

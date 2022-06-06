@@ -36,6 +36,7 @@
         "import"
     ],
     "rules": {
+        "no-prototype-builtins":"off",
         "no-case-declarations":"off",
         "no-debugger":"off",
         "no-unsafe-finally":"off",
