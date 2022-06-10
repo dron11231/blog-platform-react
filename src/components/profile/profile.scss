@@ -1,0 +1,78 @@
+@import '../../variables.scss';
+
+.form {
+    max-width: 530px;
+    background-color: white;
+    margin: 0 auto;
+    margin-top: 4rem;
+    padding-bottom: 3rem;
+    box-shadow: 0px 22px 106px rgba(0, 0, 0, 0.07), 0px 9.19107px 44.2843px rgba(0, 0, 0, 0.0503198), 0px 4.91399px 23.6765px rgba(0, 0, 0, 0.0417275), 0px 2.75474px 13.2728px rgba(0, 0, 0, 0.035), 0px 1.46302px 7.04911px rgba(0, 0, 0, 0.0282725), 0px 0.608796px 2.93329px rgba(0, 0, 0, 0.0196802);
+    border: 1px solid #D9D9D9;
+    border-radius: 6px;
+
+    .inner-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    input {
+        outline: none;
+    }
+
+    &__title {
+        font-size: $xl-font-size;
+        color: $main-font-color;
+        line-height: 28px;
+        align-self: center;
+        margin-top: 3rem;
+    }
+
+    &__input-wrapper {
+        display: flex;
+        flex-direction: column;
+        margin-top: 0.75rem;
+    }
+
+    &__input-name {
+        color: $main-font-color;
+        font-size: $md-font-size;
+        line-height: 22px;
+    }
+
+    &__input {
+        border: 1px solid #D9D9D9;
+        border-radius: 4px;
+        padding: 0.5rem 0.75rem;
+
+        &--error {
+            border-color: red;
+        }
+    }
+
+    &__btn {
+        margin-top: 1.3rem;
+        border: none;
+        background: #1890FF;
+        color: white;
+        font-family: $main-font-family;
+        font-size: $xmd-font-size;
+        padding: 0.5rem 0;
+        border-radius: 4px;
+    }
+
+    &__error-text {
+        color: red;
+        animation: smooth-transition forwards 0.5s;
+    }
+
+}
+
+@keyframes smooth-transition {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

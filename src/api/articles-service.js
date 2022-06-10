@@ -50,6 +50,53 @@ class ArticlesService {
     const resJson = await res.json();
     return resJson;
   };
+
+  updateUser = async (data) => {
+    let newUserData = {
+      user: {
+        email: data.email,
+        username: data.username,
+        image: data.avatar,
+      },
+    };
+
+    newUserData = JSON.stringify(newUserData);
+
+    const res = await fetch('https://kata.academy:8021/api/user', {
+      method: 'PUT',
+      body: newUserData,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('userToken'),
+      },
+    });
+
+    const resJson = await res.json();
+    return resJson;
+  };
+
+  postArticle = async (data) => {
+    let articleData = {
+      article: {
+        title: data.title,
+        description: data.description,
+        body: data.text,
+        tagList: data.tagList,
+      },
+    };
+    articleData = JSON.stringify(articleData);
+    const res = await fetch('https://kata.academy:8021/api/articles', {
+      method: 'POST',
+      body: articleData,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('userToken'),
+      },
+    });
+
+    const resJson = await res.json();
+    return resJson;
+  };
 }
 
 export default ArticlesService;

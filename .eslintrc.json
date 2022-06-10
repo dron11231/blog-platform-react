@@ -36,6 +36,7 @@
         "import"
     ],
     "rules": {
+        "react/no-children-prop": "off",
         "no-prototype-builtins":"off",
         "no-case-declarations":"off",
         "no-debugger":"off",

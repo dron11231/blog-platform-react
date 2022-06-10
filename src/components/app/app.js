@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 
+import Profile from '../profile/profile';
 import SignUp from '../sign-up/sign-up';
 import SignIn from '../sign-in/sign-in';
 import Main from '../main/main';
 import Header from '../header/header';
 import ArticlePage from '../article-page/article-page';
+import CreateArticle from '../create-article/create-article';
 import ArticlesService from '../../api/articles-service';
 
 import './app.scss';
@@ -21,12 +23,17 @@ export default function App() {
     };
   }, []);
 
+  const initialAuthorization = useMemo(() => {
+    return {
+      user: {},
+      auth: false,
+    };
+  }, []);
+
   const [articles, setArticleList] = useState({ articleList: [], offset: 0, articlesCount: 0 });
   const [statusData, setStatus] = useState(initialStatus);
-  const [authorization, setAuthorization] = useState({
-    user: {},
-    auth: false,
-  });
+  const [authorization, setAuthorization] = useState(initialAuthorization);
+  const [token, setToken] = useState(localStorage.getItem('userToken'));
 
   const articlesService = new ArticlesService();
 
@@ -40,8 +47,8 @@ export default function App() {
         .then((res) => res.json())
         .then((res) => {
           setAuthorization(() => {
-            if (res.user.avatar) {
-              return { user: res.user, auth: true };
+            if (res.user.image) {
+              return { user: { ...res.user, avatar: res.user.image }, auth: true };
             } else {
               return {
                 user: { ...res.user, avatar: 'https://static.productionready.io/images/smiley-cyrus.jpg' },
@@ -54,7 +61,7 @@ export default function App() {
           setStatus({ loading: false, error: true });
         });
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     setStatus(initialStatus);
@@ -89,7 +96,7 @@ export default function App() {
   return (
     <>
       <AuthContext.Provider value={{ auth: authorization, setAuthorization: setAuthorization }}>
-        <Header />
+        <Header setToken={setToken} />
         <Route path="/" exact render={() => main} />
         <Route path="/articles" exact render={() => main} />
         <Route
@@ -109,6 +116,22 @@ export default function App() {
           path="/sign-in"
           render={({ history }) => {
             return <SignIn history={history} />;
+          }}
+        />
+        <Route
+          path="/profile"
+          render={({ history }) => {
+            return <Profile setToken={setToken} history={history} />;
+          }}
+        />
+        <Route
+          path="/new-article"
+          render={() => {
+            if (authorization.auth) {
+              return <CreateArticle />;
+            } else {
+              <Redirect to="/sign-in" />;
+            }
           }}
         />
       </AuthContext.Provider>

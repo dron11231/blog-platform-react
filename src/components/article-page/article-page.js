@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import ArticlesService from '../../api/articles-service';
 import Spinner from '../spinner/spinner';
-import avatar from '../article/avatar.svg';
 import like from '../article/like.svg';
 import './article-page.scss';
 
@@ -26,14 +26,17 @@ export default function ArticlePage({ slug }) {
     );
   } else {
     let id = 1;
-    const tagsList = articleData.tagList.map((tag) => {
-      id++;
-      return (
-        <span key={id} className="article__tag">
-          {tag}
-        </span>
-      );
-    });
+    let tagsList;
+    if (articleData.tagList !== null && articleData.tagList !== undefined) {
+      tagsList = articleData.tagList.map((tag) => {
+        id++;
+        return (
+          <span key={id} className="article__tag">
+            {tag}
+          </span>
+        );
+      });
+    }
     return (
       <div className="container">
         <div className="article-page">
@@ -61,7 +64,9 @@ export default function ArticlePage({ slug }) {
               <p className="article__description">{articleData.description}</p>
             </div>
           </div>
-          <div className="article-page__body">{articleData.body}</div>
+          <div className="article-page__body">
+            <ReactMarkdown>{articleData.body}</ReactMarkdown>
+          </div>
         </div>
       </div>
     );

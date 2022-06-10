@@ -1,23 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-import ArticlesService from '../../api/articles-service';
+import format from 'date-fns/format';
 
 import './article.scss';
 import like from './like.svg';
 
-const articlesService = new ArticlesService();
-
 export default function Article({ slug, title, author, tags, likes, createdDate, description }) {
   let id = 1;
-  const tagsList = tags.map((tag) => {
-    id++;
-    return (
-      <span key={id} className="article__tag">
-        {tag}
-      </span>
-    );
-  });
+  let tagsList;
+  const date = format(new Date(createdDate), 'MMMM d, yyyy');
+  if (tags !== null && tags !== undefined) {
+    tagsList = tags.map((tag) => {
+      id++;
+      return (
+        <span key={id} className="article__tag">
+          {tag}
+        </span>
+      );
+    });
+  }
 
   return (
     <div className="article">
@@ -39,7 +40,7 @@ export default function Article({ slug, title, author, tags, likes, createdDate,
         <div className="article__header-item">
           <div className="article__details">
             <span className="article__author-name">{author.username}</span>
-            <span className="article__date">March 5, 2020</span>
+            <span className="article__date">{date}</span>
           </div>
           <img src={author.image} alt="avatar" className="article__avatar" />
         </div>

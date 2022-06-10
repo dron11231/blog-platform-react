@@ -4,17 +4,21 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../app/app';
 import './authorization.scss';
 
-export default function Authorization() {
+export default function Authorization({ setToken }) {
   const { auth, setAuthorization } = useContext(AuthContext);
-  const content = auth.auth ? <Authorized auth={auth} setAuthorization={setAuthorization} /> : <NotAuthorized />;
+  const content = auth.auth ? (
+    <Authorized auth={auth} setToken={setToken} setAuthorization={setAuthorization} />
+  ) : (
+    <NotAuthorized />
+  );
   return content;
 }
 
-const Authorized = ({ auth, setAuthorization }) => {
+const Authorized = ({ auth, setAuthorization, setToken }) => {
   const { user } = auth;
   return (
     <div className="authorization">
-      <Link to="/" className="authorization__btn--create">
+      <Link to="/new-article" className="authorization__btn--create">
         Create Article
       </Link>
       <Link to="/profile" className="authorization__user ">
@@ -25,6 +29,7 @@ const Authorized = ({ auth, setAuthorization }) => {
         className="authorization__btn--log-out"
         onClick={() => {
           localStorage.removeItem('userToken');
+          setToken(null);
           setAuthorization({ user: {}, auth: false });
         }}
       >
