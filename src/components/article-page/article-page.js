@@ -4,9 +4,10 @@ import ReactMarkdown from 'react-markdown';
 import ArticlesService from '../../api/articles-service';
 import Spinner from '../spinner/spinner';
 import like from '../article/like.svg';
+import ArticleButtons from '../article-buttons/article-buttons';
 import './article-page.scss';
 
-export default function ArticlePage({ slug }) {
+export default function ArticlePage({ slug, history, setUpdate }) {
   const [articleData, setArticleData] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -62,6 +63,7 @@ export default function ArticlePage({ slug }) {
             </div>
             <div className="article__body">
               <p className="article__description">{articleData.description}</p>
+              <ArticleButtons author={articleData.author} slug={slug} history={history} setUpdate={setUpdate} />
             </div>
           </div>
           <div className="article-page__body">

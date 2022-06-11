@@ -20,6 +20,23 @@
     .article {
         filter: none;
         padding: 0;
+
+        &__description {
+            opacity: 0.5;
+            max-width: 680px;
+        }
+
+        &__body {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+    }
+
+    &__body {
+        margin-top: 1rem;
+        word-break: break-all;
     }
 
     &__text {
@@ -27,4 +44,6 @@
         color: $main-font-color;
         opacity: 0.75;
     }
+
+    
 }

@@ -6,7 +6,7 @@ import { AuthContext } from '../app/app';
 import ArticlesService from '../../api/articles-service';
 import './sign-in.scss';
 
-export default function SignIn({ history }) {
+export default function SignIn({ history, setToken }) {
   const {
     register,
     handleSubmit,
@@ -31,6 +31,7 @@ export default function SignIn({ history }) {
           user: { ...res.user, avatar: 'https://static.productionready.io/images/smiley-cyrus.jpg' },
           auth: true,
         });
+        setToken(localStorage.setItem('userToken', res.user.token));
       }
     });
   };

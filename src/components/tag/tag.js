@@ -1,13 +1,14 @@
 import React from 'react';
 import './tag.scss';
 
-export default function Tag({ setTags, id, value, tagList, register }) {
-  const lastElem = tagList.reduce((acc, value) => {
+export default function Tag({ setTags, id, value, tagList, edit }) {
+  let lastElem = tagList.reduce((acc, value) => {
     if (value.id > acc.id) {
       acc = value;
     }
     return acc;
   });
+
   const button =
     lastElem.id === id ? (
       <button

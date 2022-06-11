@@ -1,0 +1,26 @@
+@import '../../variables.scss';
+
+.article-btns {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    &__btn {
+        font-size: $md-font-size;
+        font-family: $main-font-family;
+        padding: 0.3rem 1rem;
+        border-radius: 5px;
+        background: none;
+        border: 1px solid;
+    }
+
+    &__btn--delete {
+        border-color: $highlight-color;
+        color: $highlight-color;
+    }
+
+    &__btn--edit {
+        border-color: $success-color;
+        color: $success-color;
+    }
+}

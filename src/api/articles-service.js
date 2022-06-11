@@ -97,6 +97,41 @@ class ArticlesService {
     const resJson = await res.json();
     return resJson;
   };
+
+  deleteArticle = (slug) => {
+    return fetch(`https://kata.academy:8021/api/articles/${slug}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('userToken'),
+      },
+    });
+  };
+
+  updateArticle = async (data, slug) => {
+    let newArticleData = {
+      article: {
+        title: data.title,
+        description: data.description,
+        body: data.text,
+        tagList: data.tagList,
+      },
+    };
+
+    newArticleData = JSON.stringify(newArticleData);
+
+    const res = await fetch(`https://kata.academy:8021/api/articles/${slug}`, {
+      method: 'PUT',
+      body: newArticleData,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('userToken'),
+      },
+    });
+
+    const resJson = await res.json();
+    return resJson;
+  };
 }
 
 export default ArticlesService;

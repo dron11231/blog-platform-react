@@ -31,6 +31,7 @@ export default function App() {
   }, []);
 
   const [articles, setArticleList] = useState({ articleList: [], offset: 0, articlesCount: 0 });
+  const [update, setUpdate] = useState(false);
   const [statusData, setStatus] = useState(initialStatus);
   const [authorization, setAuthorization] = useState(initialAuthorization);
   const [token, setToken] = useState(localStorage.getItem('userToken'));
@@ -65,7 +66,7 @@ export default function App() {
 
   useEffect(() => {
     setStatus(initialStatus);
-
+    setUpdate(false);
     articlesService
       .getArticles(articles.offset)
       .then((res) => {
@@ -85,25 +86,43 @@ export default function App() {
       .catch((err) => {
         setStatus({ loading: false, error: true });
       });
-  }, [articles.offset]);
+  }, [articles.offset, update]);
 
   const { loading, error } = statusData;
 
   const main = (
-    <Main loading={loading} articles={articles} articleList={articles.articleList} setArticleList={setArticleList} />
+    <Main
+      loading={loading}
+      articles={articles}
+      articleList={articles.articleList}
+      setArticleList={setArticleList}
+      offset={articles.offset}
+    />
   );
 
   return (
     <>
       <AuthContext.Provider value={{ auth: authorization, setAuthorization: setAuthorization }}>
-        <Header setToken={setToken} />
-        <Route path="/" exact render={() => main} />
-        <Route path="/articles" exact render={() => main} />
+        <Header setToken={setToken} setArticleList={setArticleList} />
+        <Route
+          path="/"
+          exact
+          render={() => {
+            return main;
+          }}
+        />
+        <Route
+          path="/articles"
+          exact
+          render={() => {
+            return main;
+          }}
+        />
         <Route
           path="/articles/:slug"
           exact
-          render={({ match }) => {
-            return <ArticlePage slug={match.params.slug} />;
+          render={({ match, history }) => {
+            return <ArticlePage slug={match.params.slug} history={history} setUpdate={setUpdate} />;
           }}
         />
         <Route
@@ -115,7 +134,7 @@ export default function App() {
         <Route
           path="/sign-in"
           render={({ history }) => {
-            return <SignIn history={history} />;
+            return <SignIn history={history} setToken={setToken} />;
           }}
         />
         <Route
@@ -126,9 +145,27 @@ export default function App() {
         />
         <Route
           path="/new-article"
-          render={() => {
+          render={({ history }) => {
             if (authorization.auth) {
-              return <CreateArticle />;
+              return <CreateArticle history={history} setUpdate={setUpdate} />;
+            } else {
+              <Redirect to="/sign-in" />;
+            }
+          }}
+        />
+        <Route
+          path="/articles/:slug/edit"
+          render={({ history, match }) => {
+            if (authorization.auth) {
+              return (
+                <CreateArticle
+                  history={history}
+                  articles={articles.articleList}
+                  edit={true}
+                  slug={match.params.slug}
+                  setUpdate={setUpdate}
+                />
+              );
             } else {
               <Redirect to="/sign-in" />;
             }

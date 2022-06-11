@@ -4,12 +4,23 @@ import { Link } from 'react-router-dom';
 import Authorization from '../authorization/authorization';
 import './header.scss';
 
-export default function Header({ setToken }) {
+export default function Header({ setToken, setArticleList }) {
   return (
     <header className="header">
       <div className="inner-wrapper">
         <h1 className="header__title">
-          <Link exact="true" to="/">
+          <Link
+            exact="true"
+            to="/"
+            onClick={() => {
+              setArticleList((articles) => {
+                return {
+                  ...articles,
+                  offset: 0,
+                };
+              });
+            }}
+          >
             Realworld Blog
           </Link>
         </h1>
