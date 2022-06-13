@@ -36,7 +36,7 @@
 
     &__body {
         margin-top: 1rem;
-        word-break: break-all;
+        overflow-wrap: break-word;
     }
 
     &__text {

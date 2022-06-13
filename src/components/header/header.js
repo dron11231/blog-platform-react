@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Authorization from '../authorization/authorization';
 import './header.scss';
 
-export default function Header({ setToken, setArticleList }) {
+export default function Header({ setToken, setArticleList, setUpdate }) {
   return (
     <header className="header">
       <div className="inner-wrapper">
@@ -19,6 +19,7 @@ export default function Header({ setToken, setArticleList }) {
                   offset: 0,
                 };
               });
+              setUpdate(true);
             }}
           >
             Realworld Blog

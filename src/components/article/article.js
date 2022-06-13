@@ -1,11 +1,25 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import format from 'date-fns/format';
 
 import './article.scss';
-import like from './like.svg';
+import ArticlesService from '../../api/articles-service';
+import { AuthContext } from '../app/app';
 
-export default function Article({ slug, title, author, tags, likes, createdDate, description }) {
+import like from './like.svg';
+import activeLike from './active-like.svg';
+
+export default function Article({
+  slug,
+  title,
+  author,
+  tags,
+  likesCount,
+  createdDate,
+  description,
+  favorited,
+  history,
+}) {
   let id = 1;
   let tagsList;
   const date = format(new Date(createdDate), 'MMMM d, yyyy');
@@ -20,6 +34,15 @@ export default function Article({ slug, title, author, tags, likes, createdDate,
     });
   }
 
+  const authorization = useContext(AuthContext);
+
+  const [likes, setFavorited] = useState({
+    likesCount: likesCount,
+    favorite: favorited,
+  });
+
+  const articlesService = new ArticlesService();
+
   return (
     <div className="article">
       <div className="article__header">
@@ -32,9 +55,28 @@ export default function Article({ slug, title, author, tags, likes, createdDate,
             </h2>
             <div className="article__tags">{tagsList}</div>
           </div>
-          <button className="article__like">
-            <img src={like} alt="like" />
-            <span className="article__likes-count">{likes}</span>
+          <button
+            className="article__like"
+            onClick={() => {
+              if (authorization.auth.auth) {
+                if (!likes.favorite) {
+                  articlesService.favoriteArticle(slug).then((res) => {
+                    const article = res.article;
+                    setFavorited({ favorite: article.favorited, likesCount: article.favoritesCount });
+                  });
+                } else {
+                  articlesService.unfavoriteArticle(slug).then((res) => {
+                    const article = res.article;
+                    setFavorited({ favorite: article.favorited, likesCount: article.favoritesCount });
+                  });
+                }
+              } else {
+                history.push('/sign-in');
+              }
+            }}
+          >
+            <img src={likes.favorite ? activeLike : like} alt="like" />
+            <span className="article__likes-count">{likes.likesCount}</span>
           </button>
         </div>
         <div className="article__header-item">

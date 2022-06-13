@@ -1,23 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
+import { AuthContext } from '../app/app';
 import ArticlesService from '../../api/articles-service';
 import Spinner from '../spinner/spinner';
 import like from '../article/like.svg';
+import activeLike from '../article/active-like.svg';
 import ArticleButtons from '../article-buttons/article-buttons';
 import './article-page.scss';
 
 export default function ArticlePage({ slug, history, setUpdate }) {
   const [articleData, setArticleData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [updatePage, setUpdatePage] = useState(false);
+  const articlesService = new ArticlesService();
+  const authorization = useContext(AuthContext);
 
   useEffect(() => {
-    const articlesService = new ArticlesService();
+    setUpdatePage(false);
     articlesService.getArticlePage(slug).then((res) => {
       setArticleData(res);
       setLoading(false);
     });
-  }, []);
+  }, [updatePage]);
 
   if (loading) {
     return (
@@ -48,8 +53,25 @@ export default function ArticlePage({ slug, history, setUpdate }) {
                   <h2 className="article__title">{articleData.title}</h2>
                   <div className="article__tags">{tagsList}</div>
                 </div>
-                <button className="article__like">
-                  <img src={like} alt="like" />
+                <button
+                  className="article__like"
+                  onClick={() => {
+                    if (authorization.auth.auth) {
+                      if (!articleData.favorited) {
+                        articlesService.favoriteArticle(slug).then((res) => {
+                          setUpdatePage(true);
+                        });
+                      } else {
+                        articlesService.unfavoriteArticle(slug).then((res) => {
+                          setUpdatePage(true);
+                        });
+                      }
+                    } else {
+                      history.push('/sign-in');
+                    }
+                  }}
+                >
+                  <img src={articleData.favorited ? activeLike : like} alt="like" />
                   <span className="article__likes-count">{articleData.favoritesCount}</span>
                 </button>
               </div>

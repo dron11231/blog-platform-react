@@ -86,36 +86,44 @@ export default function App() {
       .catch((err) => {
         setStatus({ loading: false, error: true });
       });
-  }, [articles.offset, update]);
+  }, [articles.offset, update, authorization]);
 
   const { loading, error } = statusData;
-
-  const main = (
-    <Main
-      loading={loading}
-      articles={articles}
-      articleList={articles.articleList}
-      setArticleList={setArticleList}
-      offset={articles.offset}
-    />
-  );
 
   return (
     <>
       <AuthContext.Provider value={{ auth: authorization, setAuthorization: setAuthorization }}>
-        <Header setToken={setToken} setArticleList={setArticleList} />
+        <Header setToken={setToken} setArticleList={setArticleList} setUpdate={setUpdate} />
         <Route
           path="/"
           exact
-          render={() => {
-            return main;
+          render={({ history }) => {
+            return (
+              <Main
+                history={history}
+                loading={loading}
+                articles={articles}
+                articleList={articles.articleList}
+                setArticleList={setArticleList}
+                offset={articles.offset}
+              />
+            );
           }}
         />
         <Route
           path="/articles"
           exact
-          render={() => {
-            return main;
+          render={({ history }) => {
+            return (
+              <Main
+                history={history}
+                loading={loading}
+                articles={articles}
+                articleList={articles.articleList}
+                setArticleList={setArticleList}
+                offset={articles.offset}
+              />
+            );
           }}
         />
         <Route

@@ -1,11 +1,25 @@
 class ArticlesService {
   getArticles = async (offset) => {
-    const res = await (await fetch(`https://kata.academy:8021/api/articles?offset=${offset}`)).json();
+    const res = await (
+      await fetch(`https://kata.academy:8021/api/articles?offset=${offset}&limit=10`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('userToken'),
+        },
+      })
+    ).json();
     return res;
   };
 
   getArticlePage = async (slug) => {
-    const res = await (await fetch(`https://kata.academy:8021/api/articles/${slug}`)).json();
+    const res = await (
+      await fetch(`https://kata.academy:8021/api/articles/${slug}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('userToken'),
+        },
+      })
+    ).json();
     return res.article;
   };
 
@@ -102,7 +116,6 @@ class ArticlesService {
     return fetch(`https://kata.academy:8021/api/articles/${slug}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
         Authorization: 'Bearer ' + localStorage.getItem('userToken'),
       },
     });
@@ -129,6 +142,29 @@ class ArticlesService {
       },
     });
 
+    const resJson = await res.json();
+    return resJson;
+  };
+
+  favoriteArticle = async (slug) => {
+    const res = await fetch(`https://kata.academy:8021/api/articles/${slug}/favorite`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('userToken'),
+      },
+    });
+    const resJson = await res.json();
+    return resJson;
+  };
+
+  unfavoriteArticle = async (slug) => {
+    const res = await fetch(`https://kata.academy:8021/api/articles/${slug}/favorite`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('userToken'),
+      },
+    });
     const resJson = await res.json();
     return resJson;
   };
