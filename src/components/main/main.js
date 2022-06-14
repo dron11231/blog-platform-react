@@ -5,11 +5,11 @@ import ArticleList from '../article-list/article-list';
 import Spinner from '../spinner/spinner';
 import './main.scss';
 
-export default function Main({ articles, articleList, setArticleList, loading, offset }) {
+export default function Main({ articles, articleList, setArticleList, loading, offset, history }) {
   const content = loading ? (
     <Spinner />
   ) : (
-    <ArticleList articles={articles} articleList={articleList} setArticleList={setArticleList} />
+    <ArticleList articles={articles} articleList={articleList} setArticleList={setArticleList} history={history} />
   );
   let paginationValue;
   if (offset != '0') {
