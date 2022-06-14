@@ -1,1 +1,1 @@
-https://blog-platform-rho.vercel.app/
+https://blog-platform-dron11231.vercel.app/
