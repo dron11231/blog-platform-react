@@ -19,3 +19,26 @@ button {
     width: 90%;
     margin: 0 auto;
 }
+
+.ant-pagination-item {
+    background: none;
+    border: none;
+}
+
+
+.ant-pagination-item-active {
+    background-color: #1890FF;
+    border-radius: 4px;
+    a {
+        color: white;        
+    }
+}
+
+.ant-pagination-item-active a:hover {
+    color: white;
+}
+
+.ant-pagination-prev .ant-pagination-item-link, .ant-pagination-next .ant-pagination-item-link {
+    background: none;
+    border: none;
+}

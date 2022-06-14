@@ -1,7 +1,7 @@
 import React from 'react';
 import './tag.scss';
 
-export default function Tag({ setTags, id, value, tagList, edit }) {
+export default function Tag({ setTags, id, value, tagList }) {
   let lastElem = tagList.reduce((acc, value) => {
     if (value.id > acc.id) {
       acc = value;

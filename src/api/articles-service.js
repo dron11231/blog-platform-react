@@ -11,6 +11,10 @@ class ArticlesService {
     return res;
   };
 
+  getArticle = async (slug) => {
+    return await (await fetch(`https://kata.academy:8021/api/articles/${slug}`)).json();
+  };
+
   getArticlePage = async (slug) => {
     const res = await (
       await fetch(`https://kata.academy:8021/api/articles/${slug}`, {

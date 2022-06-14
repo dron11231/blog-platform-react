@@ -32,6 +32,10 @@
             justify-content: space-between;
         }
 
+        &__like-wrapper {
+            margin-top: 0;
+        }
+
     }
 
     &__body {
@@ -45,5 +49,5 @@
         opacity: 0.75;
     }
 
-    
+
 }

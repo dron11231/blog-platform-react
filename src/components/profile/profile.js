@@ -1,7 +1,8 @@
 /* eslint-disable no-useless-escape */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { AuthContext } from '../app/app';
 import ArticlesService from '../../api/articles-service';
 import './profile.scss';
 
@@ -12,8 +13,10 @@ export default function Profile({ setToken, history }) {
     formState: { errors },
   } = useForm({ mode: 'onSubmit' });
 
+  const user = useContext(AuthContext).auth.user;
   const articlesService = new ArticlesService();
   const [serviceErrs, setServiceErrs] = useState({});
+
   const onSubmit = (data) => {
     if (localStorage.getItem('userToken')) {
       articlesService.updateUser(data).then((res) => {
@@ -48,6 +51,7 @@ export default function Profile({ setToken, history }) {
             className={(errors.username || serviceErrs.username ? 'form__input--error ' : '') + 'form__input'}
             type={'text'}
             placeholder="Username"
+            defaultValue={user.username}
           />
           {errors.username?.type === 'required' && <span className="form__error-text">Username is required</span>}
           {errors.username?.type === 'minLength' && (
@@ -71,6 +75,7 @@ export default function Profile({ setToken, history }) {
             className={(errors.email || serviceErrs.email ? 'form__input--error ' : '') + 'form__input'}
             type="text"
             placeholder="Email address"
+            defaultValue={user.email}
           />
           {errors.email?.type === 'pattern' && <span className="form__error-text">Incorrect email</span>}
           {errors.email?.type === 'required' && <span className="form__error-text">Email is required</span>}
@@ -106,6 +111,7 @@ export default function Profile({ setToken, history }) {
             className={(errors.avatar ? 'form__input--error ' : '') + 'form__input'}
             placeholder="Avatar image"
             {...register('avatar', { required: false, pattern: urlReg })}
+            defaultValue={user.avatar}
           />
           {errors.avatar?.type === 'pattern' && <span className="form__error-text">Incorrect url</span>}
         </div>

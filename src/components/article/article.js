@@ -48,36 +48,40 @@ export default function Article({
       <div className="article__header">
         <div className="article__header-item">
           <div className="article__details">
-            <h2 className="article__title">
-              <Link to={`/articles/${slug}`} className="article__link">
-                {title}
-              </Link>
-            </h2>
+            <div className="article__title-wrapper">
+              <h2 className="article__title">
+                <Link to={`/articles/${slug}`} className="article__link">
+                  {title}
+                </Link>
+              </h2>
+              <div className="article__like-wrapper">
+                <button
+                  className="article__like"
+                  onClick={() => {
+                    if (authorization.auth.auth) {
+                      if (!likes.favorite) {
+                        articlesService.favoriteArticle(slug).then((res) => {
+                          const article = res.article;
+                          setFavorited({ favorite: article.favorited, likesCount: article.favoritesCount });
+                        });
+                      } else {
+                        articlesService.unfavoriteArticle(slug).then((res) => {
+                          const article = res.article;
+                          setFavorited({ favorite: article.favorited, likesCount: article.favoritesCount });
+                        });
+                      }
+                    } else {
+                      history.push('/sign-in');
+                    }
+                  }}
+                >
+                  <img src={likes.favorite ? activeLike : like} alt="like" />
+                </button>
+                <span className="article__likes-count">{likes.likesCount}</span>
+              </div>
+            </div>
             <div className="article__tags">{tagsList}</div>
           </div>
-          <button
-            className="article__like"
-            onClick={() => {
-              if (authorization.auth.auth) {
-                if (!likes.favorite) {
-                  articlesService.favoriteArticle(slug).then((res) => {
-                    const article = res.article;
-                    setFavorited({ favorite: article.favorited, likesCount: article.favoritesCount });
-                  });
-                } else {
-                  articlesService.unfavoriteArticle(slug).then((res) => {
-                    const article = res.article;
-                    setFavorited({ favorite: article.favorited, likesCount: article.favoritesCount });
-                  });
-                }
-              } else {
-                history.push('/sign-in');
-              }
-            }}
-          >
-            <img src={likes.favorite ? activeLike : like} alt="like" />
-            <span className="article__likes-count">{likes.likesCount}</span>
-          </button>
         </div>
         <div className="article__header-item">
           <div className="article__details">

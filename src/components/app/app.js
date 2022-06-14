@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, Switch } from 'react-router-dom';
 
 import Profile from '../profile/profile';
 import SignUp from '../sign-up/sign-up';
@@ -9,6 +9,7 @@ import Header from '../header/header';
 import ArticlePage from '../article-page/article-page';
 import CreateArticle from '../create-article/create-article';
 import ArticlesService from '../../api/articles-service';
+import ErrorPage from '../error-page/error-page';
 
 import './app.scss';
 import 'antd/dist/antd.css';
@@ -94,91 +95,100 @@ export default function App() {
     <>
       <AuthContext.Provider value={{ auth: authorization, setAuthorization: setAuthorization }}>
         <Header setToken={setToken} setArticleList={setArticleList} setUpdate={setUpdate} />
-        <Route
-          path="/"
-          exact
-          render={({ history }) => {
-            return (
-              <Main
-                history={history}
-                loading={loading}
-                articles={articles}
-                articleList={articles.articleList}
-                setArticleList={setArticleList}
-                offset={articles.offset}
-              />
-            );
-          }}
-        />
-        <Route
-          path="/articles"
-          exact
-          render={({ history }) => {
-            return (
-              <Main
-                history={history}
-                loading={loading}
-                articles={articles}
-                articleList={articles.articleList}
-                setArticleList={setArticleList}
-                offset={articles.offset}
-              />
-            );
-          }}
-        />
-        <Route
-          path="/articles/:slug"
-          exact
-          render={({ match, history }) => {
-            return <ArticlePage slug={match.params.slug} history={history} setUpdate={setUpdate} />;
-          }}
-        />
-        <Route
-          path="/sign-up"
-          render={({ history }) => {
-            return <SignUp history={history} />;
-          }}
-        />
-        <Route
-          path="/sign-in"
-          render={({ history }) => {
-            return <SignIn history={history} setToken={setToken} />;
-          }}
-        />
-        <Route
-          path="/profile"
-          render={({ history }) => {
-            return <Profile setToken={setToken} history={history} />;
-          }}
-        />
-        <Route
-          path="/new-article"
-          render={({ history }) => {
-            if (authorization.auth) {
-              return <CreateArticle history={history} setUpdate={setUpdate} />;
-            } else {
-              <Redirect to="/sign-in" />;
-            }
-          }}
-        />
-        <Route
-          path="/articles/:slug/edit"
-          render={({ history, match }) => {
-            if (authorization.auth) {
+        <Switch>
+          <Route
+            path="/"
+            exact
+            render={({ history }) => {
               return (
-                <CreateArticle
+                <Main
                   history={history}
-                  articles={articles.articleList}
-                  edit={true}
-                  slug={match.params.slug}
-                  setUpdate={setUpdate}
+                  loading={loading}
+                  articles={articles}
+                  articleList={articles.articleList}
+                  setArticleList={setArticleList}
+                  offset={articles.offset}
                 />
               );
-            } else {
-              <Redirect to="/sign-in" />;
-            }
-          }}
-        />
+            }}
+          />
+          <Route
+            path="/articles"
+            exact
+            render={({ history }) => {
+              return (
+                <Main
+                  history={history}
+                  loading={loading}
+                  articles={articles}
+                  articleList={articles.articleList}
+                  setArticleList={setArticleList}
+                  offset={articles.offset}
+                />
+              );
+            }}
+          />
+          <Route
+            path="/articles/:slug"
+            exact
+            render={({ match, history }) => {
+              return <ArticlePage slug={match.params.slug} history={history} setUpdate={setUpdate} />;
+            }}
+          />
+          <Route
+            path="/sign-up"
+            exact
+            render={({ history }) => {
+              return <SignUp history={history} />;
+            }}
+          />
+          <Route
+            path="/sign-in"
+            render={({ history }) => {
+              return <SignIn history={history} setToken={setToken} />;
+            }}
+          />
+          <Route
+            path="/profile"
+            exact
+            render={({ history }) => {
+              return <Profile setToken={setToken} history={history} />;
+            }}
+          />
+          <Route
+            path="/new-article"
+            exact
+            render={({ history }) => {
+              if (authorization.auth) {
+                return <CreateArticle history={history} setUpdate={setUpdate} />;
+              } else {
+                <Redirect to="/sign-in" />;
+              }
+            }}
+          />
+          <Route
+            path="/articles/:slug/edit"
+            exact
+            render={({ history, match }) => {
+              if (authorization.auth) {
+                return <CreateArticle history={history} edit={true} slug={match.params.slug} setUpdate={setUpdate} />;
+              } else {
+                <Redirect to="/sign-in" />;
+              }
+            }}
+          />
+          <Route
+            path="/403"
+            render={() => {
+              return <ErrorPage status="403" />;
+            }}
+          />
+          <Route
+            render={() => {
+              return <ErrorPage status="404" />;
+            }}
+          />
+        </Switch>
       </AuthContext.Provider>
     </>
   );

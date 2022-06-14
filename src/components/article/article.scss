@@ -18,12 +18,19 @@
         align-items: center;
     }
 
+    &__title-wrapper {
+        display: flex;
+        gap: 0.5rem;
+    }
+
     &__title {
         color: $info-color;
         line-height: 28px;
         font-weight: 400;
         font-size: $xl-font-size;
         margin: 0;
+        overflow-wrap: break-word;
+        max-width: 600px;
     }
 
     &__like {
@@ -33,7 +40,8 @@
         border: none;
         background: none;
         gap: 0.2rem;
-        margin-top: 0.2rem;
+        margin-top: 0.1rem;
+
     }
 
     &__details {
@@ -77,10 +85,18 @@
     &__description {
         font-size: $main-font-size;
         line-height: 22px;
+        overflow-wrap: break-word;
     }
 
     &__body {
         margin-top: 1rem;
+    }
+
+    &__like-wrapper {
+        display: flex;
+        align-items: flex-start;
+        align-self: flex-start;
+        margin-top: 0.2rem;
     }
 
 }

@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 
+import Spinner from '../spinner/spinner';
 import ArticlesService from '../../api/articles-service';
+import { AuthContext } from '../app/app';
 import Tag from '../tag/tag';
 import './create-article.scss';
 
-export default function CreateArticle({ history, setUpdate, edit, slug, articles }) {
+export default function CreateArticle({ history, setUpdate, edit, slug }) {
   const [tags, setTags] = useState([{ id: 1, text: '' }]);
+  const [article, setArticle] = useState({});
+  const [loading, setLoading] = useState(true);
+  const articlesService = new ArticlesService();
+  const { auth } = useContext(AuthContext);
 
   const {
     register,
@@ -14,47 +20,42 @@ export default function CreateArticle({ history, setUpdate, edit, slug, articles
     formState: { errors },
   } = useForm({ mode: 'onSubmit' });
 
-  let article = {
-    title: '',
-    description: '',
-    body: '',
-    tagList: [],
-  };
-
   if (edit) {
-    article = articles.find((article) => article.slug === slug);
     useEffect(() => {
       if (tags.length === 1) {
-        setTags(() => {
-          const newArr = [];
-          let id = 0;
-          article.tagList.forEach((tag) => {
-            id++;
-            newArr.push({ id: id, text: tag });
-          });
-          return newArr;
+        articlesService.getArticle(slug).then((res) => {
+          if (res.article.author.username === auth.user.username) {
+            setTags(() => {
+              const newArr = [];
+              let id = 0;
+              res.article.tagList.forEach((tag) => {
+                id++;
+                newArr.push({ id: id, text: tag });
+              });
+              if (newArr.length === 0) {
+                newArr.push({ id: 1, text: '' });
+              }
+              return newArr;
+            });
+            setArticle({ ...res.article });
+            setLoading(false);
+          } else {
+            history.push('/403');
+          }
         });
       }
+    }, []);
+  } else {
+    useEffect(() => {
+      setLoading(false);
     }, []);
   }
 
   let id = 0;
   const elems = tags.map((tag) => {
     id++;
-    return (
-      <Tag
-        setTags={setTags}
-        key={id}
-        id={tag.id}
-        value={tag.text}
-        tagList={tags}
-        edit={edit}
-        tagsEdit={article.tagList}
-      />
-    );
+    return <Tag setTags={setTags} key={id} id={tag.id} value={tag.text} tagList={tags} />;
   });
-
-  const articlesService = new ArticlesService();
 
   const onSubmit = (data) => {
     const tagsText = [];
@@ -66,7 +67,7 @@ export default function CreateArticle({ history, setUpdate, edit, slug, articles
     const fullData = { ...data };
     tagsText.length !== 0 ? (fullData.tagList = tagsText) : (fullData.tagList = []);
     if (edit) {
-      articlesService.updateArticle(fullData, slug).then(() => {
+      articlesService.updateArticle(fullData, slug).then((res) => {
         setUpdate(true);
         history.push('/');
       });
@@ -80,65 +81,75 @@ export default function CreateArticle({ history, setUpdate, edit, slug, articles
 
   const title = edit ? 'Edit article' : 'Create new article';
 
-  return (
-    <div className="container">
-      <div className="create-article">
-        <div className="inner-wrapper">
-          <h2 className="create-article__title">{title}</h2>
-          <form className="create-article__form" onSubmit={handleSubmit(onSubmit)}>
-            <div className="create-article__input-wrapper">
-              <span className="create-article__input-name">Title</span>
-              <input
-                {...register('title', { required: true })}
-                name="title"
-                type="text"
-                className={(errors.title ? 'create-article__input--error ' : '') + 'create-article__input'}
-                placeholder="Title"
-                defaultValue={article.title}
-              />
-              {errors.title?.type === 'required' && (
-                <span className="create-article__error-text">Title is required</span>
-              )}
-            </div>
-            <div className="create-article__input-wrapper">
-              <span className="create-article__input-name">Short description</span>
-              <input
-                {...register('description', { required: true })}
-                name="description"
-                type="text"
-                className={(errors.description ? 'create-article__input--error ' : '') + 'create-article__input'}
-                placeholder="Description"
-                defaultValue={article.description}
-              />
-              {errors.description?.type === 'required' && (
-                <span className="create-article__error-text">Description is required</span>
-              )}
-            </div>
-            <div className="create-article__input-wrapper">
-              <span className="create-article__input-name">Text</span>
-              <textarea
-                {...register('text', { required: true })}
-                name="text"
-                type="text"
-                className={(errors.text ? 'create-article__input--error ' : '') + 'create-article__input'}
-                placeholder="Text"
-                rows={10}
-                defaultValue={article.body}
-              />
-              {errors.text?.type === 'required' && <span className="create-article__error-text">Text is required</span>}
-            </div>
-            <div className="create-article__input-wrapper">
-              <span className="create-aricle__input-name">Tags</span>
-              <div className="create-article__tags-wrapper">{elems}</div>
-              <button type="submit" className="create-article__btn">
-                Send
-              </button>
-            </div>
-          </form>
+  if (loading) {
+    return (
+      <div className="container spinner">
+        <Spinner />
+      </div>
+    );
+  } else {
+    return (
+      <div className="container">
+        <div className="create-article">
+          <div className="inner-wrapper">
+            <h2 className="create-article__title">{title}</h2>
+            <form className="create-article__form" onSubmit={handleSubmit(onSubmit)}>
+              <div className="create-article__input-wrapper">
+                <span className="create-article__input-name">Title</span>
+                <input
+                  {...register('title', { required: true })}
+                  name="title"
+                  type="text"
+                  className={(errors.title ? 'create-article__input--error ' : '') + 'create-article__input'}
+                  placeholder="Title"
+                  defaultValue={article.title}
+                />
+                {errors.title?.type === 'required' && (
+                  <span className="create-article__error-text">Title is required</span>
+                )}
+              </div>
+              <div className="create-article__input-wrapper">
+                <span className="create-article__input-name">Short description</span>
+                <input
+                  {...register('description', { required: true })}
+                  name="description"
+                  type="text"
+                  className={(errors.description ? 'create-article__input--error ' : '') + 'create-article__input'}
+                  placeholder="Description"
+                  defaultValue={article.description}
+                />
+                {errors.description?.type === 'required' && (
+                  <span className="create-article__error-text">Description is required</span>
+                )}
+              </div>
+              <div className="create-article__input-wrapper">
+                <span className="create-article__input-name">Text</span>
+                <textarea
+                  {...register('text', { required: true })}
+                  name="text"
+                  type="text"
+                  className={(errors.text ? 'create-article__input--error ' : '') + 'create-article__input'}
+                  placeholder="Text"
+                  rows={10}
+                  defaultValue={article.body}
+                />
+                {errors.text?.type === 'required' && (
+                  <span className="create-article__error-text">Text is required</span>
+                )}
+              </div>
+              <div className="create-article__input-wrapper">
+                <span className="create-aricle__input-name">Tags</span>
+                <div className="create-article__tags-wrapper">{elems}</div>
+                <button type="submit" className="create-article__btn">
+                  Send
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 /* useEffect(() => {

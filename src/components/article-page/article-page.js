@@ -50,30 +50,34 @@ export default function ArticlePage({ slug, history, setUpdate }) {
             <div className="article__header">
               <div className="article__header-item">
                 <div className="article__details">
-                  <h2 className="article__title">{articleData.title}</h2>
+                  <div className="article__title-wrapper">
+                    <h2 className="article__title">{articleData.title}</h2>
+                    <div className="article__like-wrapper">
+                      <button
+                        className="article__like"
+                        onClick={() => {
+                          if (authorization.auth.auth) {
+                            if (!articleData.favorited) {
+                              articlesService.favoriteArticle(slug).then((res) => {
+                                setUpdatePage(true);
+                              });
+                            } else {
+                              articlesService.unfavoriteArticle(slug).then((res) => {
+                                setUpdatePage(true);
+                              });
+                            }
+                          } else {
+                            history.push('/sign-in');
+                          }
+                        }}
+                      >
+                        <img src={articleData.favorited ? activeLike : like} alt="like" />
+                        <span className="article__likes-count">{articleData.favoritesCount}</span>
+                      </button>
+                    </div>
+                  </div>
                   <div className="article__tags">{tagsList}</div>
                 </div>
-                <button
-                  className="article__like"
-                  onClick={() => {
-                    if (authorization.auth.auth) {
-                      if (!articleData.favorited) {
-                        articlesService.favoriteArticle(slug).then((res) => {
-                          setUpdatePage(true);
-                        });
-                      } else {
-                        articlesService.unfavoriteArticle(slug).then((res) => {
-                          setUpdatePage(true);
-                        });
-                      }
-                    } else {
-                      history.push('/sign-in');
-                    }
-                  }}
-                >
-                  <img src={articleData.favorited ? activeLike : like} alt="like" />
-                  <span className="article__likes-count">{articleData.favoritesCount}</span>
-                </button>
               </div>
               <div className="article__header-item">
                 <div className="article__details">
