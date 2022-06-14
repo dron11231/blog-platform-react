@@ -18,10 +18,15 @@ export default function ArticlePage({ slug, history, setUpdate }) {
 
   useEffect(() => {
     setUpdatePage(false);
-    articlesService.getArticlePage(slug).then((res) => {
-      setArticleData(res);
-      setLoading(false);
-    });
+    articlesService
+      .getArticlePage(slug)
+      .then((res) => {
+        setArticleData(res);
+        setLoading(false);
+      })
+      .catch((err) => {
+        history.push('/404');
+      });
   }, [updatePage]);
 
   if (loading) {

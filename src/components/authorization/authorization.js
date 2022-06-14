@@ -29,6 +29,7 @@ const Authorized = ({ auth, setAuthorization, setToken }) => {
         className="authorization__btn--log-out"
         onClick={() => {
           localStorage.removeItem('userToken');
+          localStorage.removeItem('user');
           setToken(null);
           setAuthorization({ user: {}, auth: false });
         }}

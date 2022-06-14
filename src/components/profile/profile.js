@@ -13,7 +13,7 @@ export default function Profile({ setToken, history }) {
     formState: { errors },
   } = useForm({ mode: 'onSubmit' });
 
-  const user = useContext(AuthContext).auth.user;
+  const user = JSON.parse(localStorage.getItem('user'));
   const articlesService = new ArticlesService();
   const [serviceErrs, setServiceErrs] = useState({});
 
@@ -29,8 +29,6 @@ export default function Profile({ setToken, history }) {
           history.push('/');
         }
       });
-    } else {
-      alert('You are not logged in!');
     }
   };
 
@@ -111,7 +109,7 @@ export default function Profile({ setToken, history }) {
             className={(errors.avatar ? 'form__input--error ' : '') + 'form__input'}
             placeholder="Avatar image"
             {...register('avatar', { required: false, pattern: urlReg })}
-            defaultValue={user.avatar}
+            defaultValue={user.image}
           />
           {errors.avatar?.type === 'pattern' && <span className="form__error-text">Incorrect url</span>}
         </div>

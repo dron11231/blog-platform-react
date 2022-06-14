@@ -48,6 +48,7 @@ export default function App() {
       })
         .then((res) => res.json())
         .then((res) => {
+          localStorage.setItem('user', JSON.stringify(res.user));
           setAuthorization(() => {
             if (res.user.image) {
               return { user: { ...res.user, avatar: res.user.image }, auth: true };
@@ -152,17 +153,21 @@ export default function App() {
             path="/profile"
             exact
             render={({ history }) => {
-              return <Profile setToken={setToken} history={history} />;
+              if (localStorage.getItem('userToken')) {
+                return <Profile setToken={setToken} history={history} />;
+              } else {
+                return <Redirect to="/sign-in" />;
+              }
             }}
           />
           <Route
             path="/new-article"
             exact
             render={({ history }) => {
-              if (authorization.auth) {
+              if (localStorage.getItem('userToken')) {
                 return <CreateArticle history={history} setUpdate={setUpdate} />;
               } else {
-                <Redirect to="/sign-in" />;
+                return <Redirect to="/sign-in" />;
               }
             }}
           />
@@ -170,10 +175,10 @@ export default function App() {
             path="/articles/:slug/edit"
             exact
             render={({ history, match }) => {
-              if (authorization.auth) {
+              if (localStorage.getItem('userToken')) {
                 return <CreateArticle history={history} edit={true} slug={match.params.slug} setUpdate={setUpdate} />;
               } else {
-                <Redirect to="/sign-in" />;
+                return <Redirect to="/sign-in" />;
               }
             }}
           />

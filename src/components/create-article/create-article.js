@@ -24,7 +24,8 @@ export default function CreateArticle({ history, setUpdate, edit, slug }) {
     useEffect(() => {
       if (tags.length === 1) {
         articlesService.getArticle(slug).then((res) => {
-          if (res.article.author.username === auth.user.username) {
+          const username = JSON.parse(localStorage.getItem('user')).username;
+          if (res.article.author.username === username) {
             setTags(() => {
               const newArr = [];
               let id = 0;
